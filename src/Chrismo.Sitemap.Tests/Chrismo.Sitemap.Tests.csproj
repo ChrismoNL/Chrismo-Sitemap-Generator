@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
+    <SonarQubeExclude>true</SonarQubeExclude>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
