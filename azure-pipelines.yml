@@ -45,7 +45,7 @@ steps:
 
 - script: dotnet sonarscanner end /d:sonar.login="$(Sonar.Login)"
   displayName: 'End dotnet sonar scanner'
-  
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
@@ -53,7 +53,7 @@ steps:
     nobuild: true
     includesymbols: true
     versioningScheme: 'off'
-    arguments: '--no-restore -p:Version=$(appVersion) -p:PackageVersion=$(appVersion)'
+    buildProperties: '--no-restore -p:Version=$(appVersion) -p:PackageVersion=$(appVersion)'
 
 - task: PublishBuildArtifacts@1
   inputs:
