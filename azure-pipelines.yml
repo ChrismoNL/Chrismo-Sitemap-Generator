@@ -29,8 +29,10 @@ steps:
 - script: dotnet tool install --global dotnet-sonarscanner
   displayName: 'Install sonar scanner'
 
-- script: dotnet sonarscanner begin /k:"ChrismoNL_Chrismo-Sitemap-Generator" /o:"chrismo" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(Sonar.Login)" /d:sonar.branch.name="$(Build.SourceBranchName)"
+- script: dotnet sonarscanner begin /k:"ChrismoNL_Chrismo-Sitemap-Generator" /o:"chrismo" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env:SONAR_LOGIN" /d:sonar.branch.name="$(Build.SourceBranchName)"
   displayName: 'Begin dotnet sonar scanner'
+  env:
+    SONAR_LOGIN: $(Sonar.Login)
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build Chrismo.Sitemap'
