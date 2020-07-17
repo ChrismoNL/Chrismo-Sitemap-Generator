@@ -46,14 +46,8 @@ steps:
 - script: dotnet sonarscanner end /d:sonar.login="$(Sonar.Login)"
   displayName: 'End dotnet sonar scanner'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'pack'
-    packagesToPack: 'src/Chrismo.Sitemap/Chrismo.Sitemap.csproj'
-    nobuild: true
-    includesymbols: true
-    versioningScheme: 'off'
-    buildProperties: '--no-restore -p:Version=$(appVersion) -p:PackageVersion=$(appVersion)'
+- script: dotnet pack src/Chrismo.Sitemap/Chrismo.Sitemap.csproj -p:Version=$(appVersion) -p:PackageVersion=$(appVersion) --configuration $(BuildConfiguration) --no-restore --no-build --output $(Build.ArtifactStagingDirectory)
+  displayName: 'dotnet pack Chrismo.Sitemap'
 
 - task: PublishBuildArtifacts@1
   inputs:
