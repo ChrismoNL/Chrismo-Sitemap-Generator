@@ -14,12 +14,13 @@ namespace Chrismo.Sitemap.Tests
             // arrange
             UrlSet urlSet = new UrlSet();
             urlSet.Add(Url.CreateUrl("https://www.chrismo.nl"));
+            string todayDate = DateTime.Now.ToString("yyyy-MM-dd");
 
             // act
             var result = urlSet.ToXml();
 
             // assert
-            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<urlset xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r\n  <url>\r\n    <loc>https://www.chrismo.nl</loc>\r\n    <lastmod>2020-07-16</lastmod>\r\n    <changefreq>daily</changefreq>\r\n    <priority>0.8</priority>\r\n  </url>\r\n</urlset>", result);
+            Assert.Equal($"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<urlset xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r\n  <url>\r\n    <loc>https://www.chrismo.nl</loc>\r\n    <lastmod>{todayDate}</lastmod>\r\n    <changefreq>daily</changefreq>\r\n    <priority>0.8</priority>\r\n  </url>\r\n</urlset>", result);
         }
 
         [Fact]
