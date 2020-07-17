@@ -14,12 +14,17 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-        $buildName = "$(Build.BuildNumber)"
-        $buildnumber = $buildName.replace("Chrismo_Sitemap_0_1_", "0.1.")
-        echo "##vso[task.setvariable variable=appVersion;]$buildnumber"
+      $buildName = "$(Build.BuildNumber)"
+      $buildnumber = $buildName.replace("Chrismo_Sitemap_0_1_", "0.1.")
+      echo "##vso[task.setvariable variable=appVersion;]$buildnumber"
 
-- script: dotnet test src/Chrismo.Sitemap.Tests/Chrismo.Sitemap.Tests.csproj --logger trx --collect "Code coverage"
-  displayName: 'dotnet test Chrismo.Sitemap.Tests' 
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test Chrismo.Sitemap.Tests'
+  inputs:
+    command: 'test'
+    projects: 'src/Chrismo.Sitemap.Tests/Chrismo.Sitemap.Tests.csproj'
+    arguments: '--logger trx --collect "Code coverage"'
+    testRunTitle: 'dotnet test Chrismo.Sitemap.Tests'
 
 - task: PublishTestResults@2
   displayName: 'Publish test results' 
@@ -31,14 +36,20 @@ steps:
   displayName: 'dotnet build Chrismo.Sitemap'
   inputs:
     command: 'build'
-    arguments: '--configuration $(buildConfiguration) -p:Version=$(appVersion)'
     projects: 'src/Chrismo.Sitemap/Chrismo.Sitemap.csproj'
+    arguments: '--configuration $(buildConfiguration) -p:Version=$(appVersion)'
 
-- script: dotnet pack src/Chrismo.Sitemap/Chrismo.Sitemap.csproj -p:Version=$(appVersion) -p:PackageVersion=$(appVersion) --configuration $(BuildConfiguration) --no-restore --no-build --output $(Build.ArtifactStagingDirectory)
-  displayName: 'dotnet pack Chrismo.Sitemap'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
+    packagesToPack: 'src/Chrismo.Sitemap/Chrismo.Sitemap.csproj'
+    nobuild: true
+    includesymbols: true
+    versioningScheme: 'off'
+    arguments: '--no-restore -p:Version=$(appVersion) -p:PackageVersion=$(appVersion)'
 
 - task: PublishBuildArtifacts@1
-    displayName: "Upload Artifacts"
-    inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-      artifactName: 'chrismo-sitemap-packages' 
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
