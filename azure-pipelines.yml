@@ -3,40 +3,48 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
+trigger:
+- main
+
 pool:
   vmImage: 'windows-latest'
 
+
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
+name: Chrismo_Sitemap_0_1_$(Rev:r)
+
 steps:
-    - task: UseDotNet@2 
-      displayName: ".NET Core 3.1.x"
-      inputs:
-        version: '3.1.x'
-        packageType: sdk
-    - script: dotnet build --configuration $(buildConfiguration)
-      displayName: 'dotnet build $(buildConfiguration)'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+        $buildName = "$(Build.BuildNumber)"
+        $buildnumber = $buildName.replace("Chrismo_Sitemap_0_1_", "0.1.")
+        echo "##vso[task.setvariable variable=appVersion;]$buildnumber"
 
-    - task: DotNetCoreCLI@2
-      displayName: "Test"
-      inputs:
-        command: test
-        projects: '**/*tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
+- script: dotnet test src/Chrismo.Sitemap.Tests/Chrismo.Sitemap.Tests.csproj --logger trx --collect "Code coverage"
+  displayName: 'dotnet test Chrismo.Sitemap.Tests' 
 
-    - task: DotNetCoreCLI@2
-      displayName: "Publish"
-      inputs:
-        command: 'publish'
-        publishWebProjects: false
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: true
+- task: PublishTestResults@2
+  displayName: 'Publish test results' 
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
 
-    - task: PublishBuildArtifacts@1
-      displayName: "Upload Artifacts"
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'chrismo-sitemap' 
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build Chrismo.Sitemap'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration) -p:Version=$(appVersion)'
+    projects: 'src/Chrismo.Sitemap/Chrismo.Sitemap.csproj'
+
+- script: dotnet pack src/Chrismo.Sitemap/Chrismo.Sitemap.csproj -p:Version=$(appVersion) -p:PackageVersion=$(appVersion) --configuration $(BuildConfiguration) --no-restore --no-build --output $(Build.ArtifactStagingDirectory)
+  displayName: 'dotnet pack Chrismo.Sitemap'
+
+- task: PublishBuildArtifacts@1
+    displayName: "Upload Artifacts"
+    inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'chrismo-sitemap-packages' 
