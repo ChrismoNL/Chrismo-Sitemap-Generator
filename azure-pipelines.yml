@@ -27,13 +27,13 @@ steps:
   inputs:
     command: 'test'
     projects: 'src/Chrismo.Sitemap.Tests/Chrismo.Sitemap.Tests.csproj'
-    arguments: '--logger trx -r "$(Build.SourcesDirectory)/TestResults" --collect "Code coverage"'
+    arguments: '--logger trx --collect "Code coverage"'
     testRunTitle: 'dotnet test Chrismo.Sitemap.Tests'
     
 - script: dotnet tool install --global dotnet-sonarscanner
   displayName: 'Install sonar scanner'
 
-- script: dotnet sonarscanner begin /k:"ChrismoNL_Chrismo-Sitemap-Generator" /o:"chrismo" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(Sonar.Login)" /d:sonar.branch.name="$(Build.SourceBranchName)"
+- script: dotnet sonarscanner begin /k:"ChrismoNL_Chrismo-Sitemap-Generator" /o:"chrismo" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(Sonar.Login)" /d:sonar.branch.name="$(Build.SourceBranchName)" /d:sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\*.trx /d:sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)\**\*.coverage
   displayName: 'Begin dotnet sonar scanner'
 
 - task: DotNetCoreCLI@2
