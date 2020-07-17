@@ -23,7 +23,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'src/Chrismo.Sitemap.Tests/Chrismo.Sitemap.Tests.csproj'
-    arguments: '--logger trx --results-directory "./TestResults" --collect "Code coverage"'
+    arguments: '--logger trx -r "$(Build.SourcesDirectory)/TestResults" --collect "Code coverage"'
     testRunTitle: 'dotnet test Chrismo.Sitemap.Tests'
     
 - script: dotnet tool install --global dotnet-sonarscanner
