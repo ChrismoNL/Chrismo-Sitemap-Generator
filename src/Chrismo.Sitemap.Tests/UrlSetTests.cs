@@ -58,7 +58,7 @@ namespace Chrismo.Sitemap.Tests
             var result = urlSet.ToXml();
 
             // assert
-            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<urlset xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r\n  <url>\r\n    <loc>https://www.chrismo.nl/nl</loc>\r\n    <lastmod>2008-01-08</lastmod>\r\n    <changefreq>daily</changefreq>\r\n    <priority>1</priority>\r\n    <xhtml:link hreflang=\"en\" href=\"https://www.chrismo.nl/en\" />\r\n    <xhtml:link hreflang=\"de\" href=\"https://www.chrismo.nl/de\" />\r\n    <xhtml:link hreflang=\"fr\" href=\"https://www.chrismo.nl/fr\" />\r\n  </url>\r\n</urlset>", result);
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<urlset xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r\n  <url>\r\n    <loc>https://www.chrismo.nl/nl</loc>\r\n    <lastmod>2008-01-08</lastmod>\r\n    <changefreq>daily</changefreq>\r\n    <priority>1</priority>\r\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.chrismo.nl/en\" />\r\n    <xhtml:link rel=\"alternate\" hreflang=\"de\" href=\"https://www.chrismo.nl/de\" />\r\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.chrismo.nl/fr\" />\r\n  </url>\r\n</urlset>", result);
         }
     }
 }

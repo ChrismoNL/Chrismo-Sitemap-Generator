@@ -10,11 +10,16 @@ namespace Chrismo.Sitemap.Models
 	[XmlRoot(ElementName = "link", Namespace = "http://www.w3.org/1999/xhtml")]
 	public class Link
 	{
+        public Link()
+        {
+			Rel = "alternate";
+		}
+
 		/// <summary>
 		/// The the type of link, this is always alternate and therefor already set.
 		/// </summary>
 		[XmlAttribute(AttributeName = "rel")]
-		public const string Rel = "alternate";
+		public string Rel { get; set; }
 
 		/// <summary>
 		/// The value of the hreflang attribute identifies the language (in ISO 639-1 format) and optionally a region (in ISO 3166-1 Alpha 2 format) of an alternate URL. (The language need not be related to the region.)
